@@ -1,4 +1,4 @@
-# Supermarket Admin [![Build Status](https://travis-ci.org/yourname/supermarket-admin.svg?branch=main)](https://travis-ci.org/yourname/supermarket-admin)
+# Supermarket Admin
 
 超市管理后台系统，基于Spring Boot + MyBatis Plus构建
 
