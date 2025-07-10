@@ -43,7 +43,7 @@ public class GoodController {
         return Result.fail().resetMsg("未找到该商品");
     }
     @GetMapping(value = "/list")
-    public Result listGood(GoodQueryObject queryObject, @RequestParam(value = "page",required = false,defaultValue = "1") Integer page){
+    public Result listGood(@Valid GoodQueryObject queryObject, @RequestParam(value = "page",required = false,defaultValue = "1") Integer page){
         @SuppressWarnings("unchecked")
         Page<Good> pages = goodService.page(new Page<Good>(page, 10), (Wrapper<Good>) DynamicQueryUtils.getQueryWrapper(queryObject));
         return Result.success().resetMsg("查询成功").resetData(pages);

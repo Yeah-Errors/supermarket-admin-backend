@@ -6,6 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DynamicQueryUtils {
+    /**
+     * 根据查询对象动态生成查询条件包装器
+     *
+     * @param queryObj 查询条件封装对象，包含过滤条件字段（可为null）
+     * @return QueryWrapper<?> 构建完成的查询条件包装器实例
+     * 该方法通过反射解析查询对象的字段，支持以下条件构建：
+     * 1. 普通字段：直接添加等值查询条件
+     * 2. Min后缀字段：添加大于等于条件（需实现Comparable接口）
+     * 3. Max后缀字段：添加小于等于条件（需实现Comparable接口）
+     * 4. 同时存在Min和Max后缀字段时，合并为between条件
+     */
     public static QueryWrapper<?> getQueryWrapper(Object queryObj) {
         QueryWrapper<?> wrapper = new QueryWrapper<>();
         if (queryObj == null) return wrapper;
@@ -47,17 +58,19 @@ public class DynamicQueryUtils {
             }
         }
         for (String baseName : minFields.keySet()) {
+            String dbFieldName = toUnderlineName(baseName);
             Comparable<?> minVal = minFields.get(baseName);
             Comparable<?> maxVal = maxFields.get(baseName);
             if (maxVal != null) {
-                wrapper.between(baseName, minVal, maxVal);
+                wrapper.between(dbFieldName, minVal, maxVal);
             } else {
-                wrapper.ge(baseName, minVal);
+                wrapper.ge(dbFieldName, minVal);
             }
         }
         for (String baseName : maxFields.keySet()) {
+            String dbFieldName = toUnderlineName(baseName);
             if (!minFields.containsKey(baseName)) {
-                wrapper.le(baseName, maxFields.get(baseName));
+                wrapper.le(dbFieldName, maxFields.get(baseName));
             }
         }
 
@@ -65,13 +78,27 @@ public class DynamicQueryUtils {
     }
 
     private static void addCondition(QueryWrapper<?> wrapper, String fieldName, Object value) {
+        String dbFieldName = toUnderlineName(fieldName);
         if (value instanceof String) {
             String strVal = (String) value;
             if (!strVal.isEmpty()) {
-                wrapper.like(fieldName, strVal);
+                wrapper.like(dbFieldName, strVal);
             }
         } else {
-            wrapper.eq(fieldName, value);
+            wrapper.eq(dbFieldName, value);
         }
+    }
+    private static String toUnderlineName(String camelName) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < camelName.length(); i++) {
+            char ch = camelName.charAt(i);
+            if (Character.isUpperCase(ch)) {
+                if (i > 0) result.append("_");
+                result.append(Character.toLowerCase(ch));
+            } else {
+                result.append(ch);
+            }
+        }
+        return result.toString();
     }
 }

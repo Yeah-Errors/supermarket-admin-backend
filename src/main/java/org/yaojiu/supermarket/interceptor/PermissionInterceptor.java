@@ -13,7 +13,6 @@ public class PermissionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if(request.getMethod().equals("OPTIONS")) return true;
         if (request.getSession().getAttribute("user") == null) {
-            System.out.println("用户未登录");
             String jsonString = new ObjectMapper().writeValueAsString(Result.fail().resetCode(Result.FAIL_NEED_LOGIN).resetMsg("请先登录"));
             PrintWriter writer = response.getWriter();
             response.setContentType("application/json;charset=utf-8");

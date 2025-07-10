@@ -2,6 +2,7 @@ package org.yaojiu.supermarket.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Past;
@@ -26,10 +27,10 @@ public class GoodQueryObject {
     @Min(value = 0, message = "商品库存最大值不能小于0")
     private Integer stockMax;
     private String imgPath;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Past(message = "商品创建时间起始时间不能大于当前时间")
     private Date createDateMin;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Past(message = "商品创建时间截止时间不能大于当前时间")
     private Date createDateMax;
 }

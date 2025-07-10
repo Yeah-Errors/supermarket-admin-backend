@@ -15,7 +15,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
     @Override
     public UserDTO login(UserEntity userEntity) {
         UserEntity user = getOne(Wrappers.lambdaQuery(UserEntity.class).eq(UserEntity::getUsername, userEntity.getUsername()));
-        if (user != null && SecurityUtil.verify(user.getPassword(), userEntity.getUsername())) return user.toDTO();
+        if (user != null && SecurityUtil.verify(user.getPassword(), userEntity.getPassword())) return user.toDTO();
         throw new LoginException("账号密码有误，请重试") ;
     }
 
