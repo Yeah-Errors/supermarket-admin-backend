@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
+import static org.yaojiu.supermarket.utils.SecurityUtil.hash;
 
 @Data
 @TableName("user")
@@ -22,5 +23,9 @@ public class UserEntity {
         userDTO.setUsername(username);
         userDTO.setUserType(userType);
         return userDTO;
+    }
+    public UserEntity desPwd(){
+        this.password = hash(password);
+        return this;
     }
 }

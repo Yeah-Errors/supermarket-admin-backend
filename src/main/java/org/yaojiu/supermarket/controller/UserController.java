@@ -30,7 +30,7 @@ public class UserController {
     }
     @PostMapping(value = "/reg")
     public Result reg(@NotNull @Valid @RequestBody UserEntity userEntity){
-        if (userService.register(userEntity)) return Result.success().resetMsg("注册成功,即将跳转至登陆页面");
+        if (userService.register(userEntity.desPwd())) return Result.success().resetMsg("注册成功,即将跳转至登陆页面");
         return Result.fail().resetMsg("注册失败");
     }
     @PostMapping(value = "/logout")
